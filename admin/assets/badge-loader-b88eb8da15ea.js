@@ -1,0 +1,20 @@
+import p0 from "./badge-b88eb8da15ea-0.js";
+import p1 from "./badge-b88eb8da15ea-1.js";
+import p2 from "./badge-b88eb8da15ea-2.js";
+import p3 from "./badge-b88eb8da15ea-3.js";
+import p4 from "./badge-b88eb8da15ea-4.js";
+import p5 from "./badge-b88eb8da15ea-5.js";
+import p6 from "./badge-b88eb8da15ea-6.js";
+import p7 from "./badge-b88eb8da15ea-7.js";
+import p8 from "./badge-b88eb8da15ea-8.js";
+import p9 from "./badge-b88eb8da15ea-9.js";
+import p10 from "./badge-b88eb8da15ea-10.js";
+import p11 from "./badge-b88eb8da15ea-11.js";
+import p12 from "./badge-b88eb8da15ea-12.js";
+import p13 from "./badge-b88eb8da15ea-13.js";
+import p14 from "./badge-b88eb8da15ea-14.js";
+import p15 from "./badge-b88eb8da15ea-15.js";
+import p16 from "./badge-b88eb8da15ea-16.js";
+const source=[p0,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16].join("");
+const url=URL.createObjectURL(new Blob([source],{type:"text/javascript"}));
+try { await import(url); } finally { URL.revokeObjectURL(url); }
