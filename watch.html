@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07152d">
+  <meta name="description" content="Watch a video on Beacon Stream.">
+  <meta property="og:title" content="Beacon Stream — Watch video">
+  <meta property="og:description" content="Watch this video on Beacon Stream.">
+  <title>Watch video · Beacon Stream</title>
+  <style>
+    :root{--navy:#07152d;--navy2:#0d2245;--gold:#f6c85f;--ink:#eaf1ff;--muted:#b8c6df;--card:#10284f;--line:#27446d}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(150deg,var(--navy),#0b1d3b 52%,#07152d);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.top{height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 max(18px,calc((100vw - 1040px)/2));border-bottom:1px solid #ffffff1a;background:#07152de8}.brand{display:inline-flex;align-items:center;gap:9px;color:#fff;text-decoration:none;font-weight:800;letter-spacing:.07em;font-size:.85rem}.mark{width:31px;height:31px;fill:var(--gold)}.explore{color:var(--gold);font-weight:700;text-decoration:none}.wrap{max-width:850px;margin:0 auto;padding:26px 18px 54px}.card{background:#10284fd9;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 20px 50px #0004}.stage{position:relative;min-height:300px;display:grid;place-items:center;background:radial-gradient(circle at 50% 20%,#1d477c,#07152d 69%)}video{display:none;width:100%;max-height:70vh;background:#000;vertical-align:middle}.stage.ready video{display:block}.cover{text-align:center;padding:44px 22px;color:var(--muted)}.cover svg{width:64px;fill:var(--gold);margin-bottom:8px}.cover p{margin:0}.stage.ready .cover{display:none}.details{padding:22px}.creator{margin:0;color:var(--gold);font-weight:800}.date{color:var(--muted);font-size:.9rem}.caption{white-space:pre-wrap;overflow-wrap:anywhere;margin:15px 0 22px}.actions{display:flex;flex-wrap:wrap;gap:10px}.button{border:1px solid var(--gold);border-radius:10px;padding:10px 14px;background:var(--gold);color:#10203d;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.button.secondary{color:var(--gold);background:transparent}.status{max-width:600px;margin:13vh auto;padding:28px;background:#10284fd9;border:1px solid var(--line);border-radius:16px;text-align:center}.status h1{margin-top:0}.status[hidden]{display:none}.retry{margin-top:14px}.fine{color:var(--muted);font-size:.87rem;margin:18px 0 0}@media(max-width:560px){.top{height:61px}.wrap{padding:15px 10px 35px}.details{padding:17px}.stage{min-height:240px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <header class="top"><a class="brand" href="./index.html" aria-label="Beacon Stream home"><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 3c5 12 4 18 0 25C28 21 27 15 32 3Zm0 58c-5-12-4-18 0-25 4 7 5 13 0 25ZM3 32c12-5 18-4 25 0C21 36 15 37 3 32Zm58 0c-12 5-18 4-25 0 7-4 13-5 25 0ZM11 11c12 2 17 6 19 14-8-2-12-7-19-14Zm42 42c-12-2-17-6-19-14 8 2 12 7 19 14ZM53 11c-2 12-6 17-14 19 2-8 7-12 14-19ZM11 53c2-12 6-17 14-19-2 8-7 12-14 19Z"/></svg>BEACON STREAM</a><a class="explore" href="./index.html">Explore Beacon</a></header>
+  <main class="wrap">
+    <section id="status" class="status" aria-live="polite"><h1>Finding this video…</h1><p>Beacon Stream is loading the public watch page.</p></section>
+    <article id="watch" class="card" hidden>
+      <div id="stage" class="stage"><div class="cover"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 3c5 12 4 18 0 25C28 21 27 15 32 3Zm0 58c-5-12-4-18 0-25 4 7 5 13 0 25ZM3 32c12-5 18-4 25 0C21 36 15 37 3 32Zm58 0c-12 5-18 4-25 0 7-4 13-5 25 0Z"/></svg><p>Loading video…</p></div><video id="video" controls playsinline preload="metadata"></video></div>
+      <div class="details"><p id="creator" class="creator"></p><div id="date" class="date"></div><p id="caption" class="caption"></p><div class="actions"><a id="openApp" class="button" href="#">Open Beacon</a><a id="share" class="button secondary" href="#">Copy share link</a></div><p class="fine">This is a public Beacon Stream video. Sharing opens this public page.</p></div>
+    </article>
+  </main>
+<script>
+(() => {
+  'use strict';
+  // Publishable client credentials only; never add a service-role key here.
+  const SUPABASE_URL='https://jldfxrjzdgurfmoxocmy.supabase.co';
+  const SUPABASE_ANON_KEY='sb_publishable_-_FVEQzVxVk6uxtrFUfxlQ_8NF3lVph';
+  const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const $=id=>document.getElementById(id); let videoId='';
+  const setStatus=(title,detail,retry=false)=>{$('watch').hidden=true;$('status').hidden=false;$('status').replaceChildren(Object.assign(document.createElement('h1'),{textContent:title}),Object.assign(document.createElement('p'),{textContent:detail}));if(retry){const b=Object.assign(document.createElement('button'),{className:'button retry',textContent:'Retry'});b.onclick=load;$('status').append(b)}};
+  const storageUrlOK=url=>{try{const u=new URL(url);return u.protocol==='https:'&&u.hostname==='jldfxrjzdgurfmoxocmy.supabase.co'&&u.pathname.startsWith('/storage/v1/object/public/videos/')}catch{return false}};
+  const watchUrl=id=>new URL('./watch.html?v='+encodeURIComponent(id),location.href).href;
+  function formatDate(value){const d=new Date(value);return Number.isNaN(d.valueOf())?'':d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}
+  async function load(){
+    const id=new URL(location.href).searchParams.get('v')||new URL(location.href).searchParams.get('id')||''; videoId=id;
+    if(!UUID.test(id)){setStatus('Video link not valid','Please use the complete Beacon Stream share link.');return}
+    setStatus('Finding this video…','Beacon Stream is loading the public watch page.');
+    try{
+      const endpoint=SUPABASE_URL+'/rest/v1/videos?select=id,video_url,caption,created_at,profiles(username,display_name)&id=eq.'+encodeURIComponent(id);
+      const r=await fetch(endpoint,{headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY,Accept:'application/json'}});
+      if(!r.ok)throw new Error(r.status===401||r.status===403?'This video is not publicly available.':'Could not load the video.');
+      const rows=await r.json(),item=Array.isArray(rows)&&rows[0];
+      if(!item)throw new Error('This video is unavailable or no longer public.');
+      if(!storageUrlOK(item.video_url))throw new Error('This video has an unsupported public media address.');
+      const profile=Array.isArray(item.profiles)?item.profiles[0]:item.profiles||{}; const name=profile.display_name||profile.username||'Beacon creator';
+      $('creator').textContent='@'+name;$('date').textContent=formatDate(item.created_at);$('caption').textContent=item.caption||'';
+      const player=$('video');player.src=item.video_url;player.onloadeddata=()=>{$('stage').classList.add('ready')};player.onerror=()=>setStatus('Video could not play','Please check your connection and try again.',true);
+      $('openApp').href='ug.beacon.stream://watch/video?id='+encodeURIComponent(id);
+      $('share').onclick=async e=>{e.preventDefault();const url=watchUrl(id);try{if(navigator.share)await navigator.share({title:'Beacon Stream video',url});else{await navigator.clipboard.writeText(url);$('share').textContent='Link copied'}}catch{}};
+      $('status').hidden=true;$('watch').hidden=false;
+    }catch(error){setStatus('Video unavailable',error.message||'Please try again.',true)}
+  }
+  load();
+  window.BeaconWatch={UUID,storageUrlOK,watchUrl};
+})();
+</script>
+</body></html>
